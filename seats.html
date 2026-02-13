@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Seats - BusDZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="page-seats">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="results.html" class="btn ghost">⬅️ Retour</a>
+      <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="glass">
+      <h2 style="color: var(--accent); font-size: 1.8rem; margin-bottom: 1.5rem;">🪑 Sélectionnez Vos Sièges</h2>
+      <div id="tripSummary"></div>
+      
+      <div style="text-align: center; margin: 1.5rem 0; color: var(--text-muted);">
+        <p>Choisissez vos sièges confortables pour le voyage</p>
+      </div>
+
+      <!-- Availability Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.3); padding: 1rem; border-radius: 10px; text-align: center; backdrop-filter: blur(10px);">
+          <div style="color: #2ecc71; font-weight: 700; font-size: 1.5rem;" id="availableSeatsCount">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85rem;">Disponibles</div>
+        </div>
+        <div style="background: rgba(230, 126, 34, 0.1); border: 1px solid rgba(230, 126, 34, 0.3); padding: 1rem; border-radius: 10px; text-align: center; backdrop-filter: blur(10px);">
+          <div style="color: #e67e22; font-weight: 700; font-size: 1.5rem;" id="bookedSeatsCount">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85rem;">Réservés</div>
+        </div>
+        <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); padding: 1rem; border-radius: 10px; text-align: center; backdrop-filter: blur(10px);">
+          <div style="color: var(--primary); font-weight: 700; font-size: 1.5rem;" id="selectedSeatsCount">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85rem;">Sélectionnés</div>
+        </div>
+      </div>
+
+      <div id="seatMap" class="seat-map"></div>
+
+      <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="seat" style="width: 40px; height: 40px; background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(255, 107, 107, 0.2));"></div>
+          <span>Disponible</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="seat selected" style="width: 40px; height: 40px;"></div>
+          <span>Sélectionné</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="seat occupied" style="width: 40px; height: 40px;"></div>
+          <span>Réservé</span>
+        </div>
+      </div>
+
+      <div class="seat-actions">
+        <button id="proceedPassenger" class="btn primary">Continuer vers les Détails →</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

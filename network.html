@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Réseau - BusDZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .network-container {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .canvas-wrapper {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.light-theme .canvas-wrapper {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+      border: 2px solid rgba(0, 0, 0, 0.05);
+    }
+
+    #networkCanvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .canvas-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+    }
+
+    .stats-panel {
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    body.light-theme .stats-panel {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+      border: 2px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-item {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.light-theme .stat-item {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      color: var(--accent);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .cities-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+
+    .city-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--accent);
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    body.light-theme .city-badge {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+    }
+
+    .city-badge:hover {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.4), rgba(78, 205, 196, 0.2));
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 900px) {
+      .network-container {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-panel {
+        position: static;
+      }
+
+      .canvas-wrapper {
+        min-height: 400px;
+      }
+    }
+  </style>
+</head>
+<body id="page-network">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="index.html" class="btn ghost">🏠 Accueil</a>
+      <a href="admin.html" class="btn ghost">👨‍💼 Admin</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section style="margin-bottom: 2rem;">
+      <h2 style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">🗺️ Réseau National</h2>
+      <p style="color: var(--text-muted); font-size: 1.05rem;">Découvrez notre réseau de villes et les connexions disponibles</p>
+    </section>
+
+    <div class="network-container">
+      <div class="canvas-wrapper">
+        <canvas id="networkCanvas"></canvas>
+        <div class="canvas-inner"></div>
+      </div>
+
+      <aside class="stats-panel">
+        <h3 style="color: var(--accent); margin-bottom: 1.5rem;">📊 Statistiques</h3>
+        
+        <div class="stat-item">
+          <div class="stat-label">🏙️ Villes Desservies</div>
+          <div class="stat-value" id="citiesCount">0</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-label">🚍 Trajets Disponibles</div>
+          <div class="stat-value" id="tripsCount">0</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-label">🚌 Compagnies</div>
+          <div class="stat-value" id="companiesCount">0</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-label">💰 Prix Moyen</div>
+          <div class="stat-value" id="avgPrice">0 DZD</div>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+          <h4 style="color: var(--accent); margin-bottom: 1rem;">🌐 Villes du Réseau</h4>
+          <div class="cities-list" id="citiesList"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© <span id="year"></span> BusDZ - Réseau de transport en Algérie</div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Network visualization
+    function initNetwork() {
+      const canvas = document.getElementById('networkCanvas');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const trips = JSON.parse(localStorage.getItem('trips')) || [];
+      
+      // Get unique cities and build network
+      const cities = new Set();
+      const connections = [];
+      trips.forEach(trip => {
+        cities.add(trip.from);
+        cities.add(trip.to);
+        connections.push({ from: trip.from, to: trip.to });
+      });
+
+      const cityArray = Array.from(cities);
+      const citiesCount = cityArray.length;
+      const companiesSet = new Set(trips.map(t => t.company));
+      
+      // Update stats
+      document.getElementById('citiesCount').textContent = citiesCount;
+      document.getElementById('tripsCount').textContent = trips.length;
+      document.getElementById('companiesCount').textContent = companiesSet.size;
+      
+      if (trips.length > 0) {
+        const avgPrice = Math.round(trips.reduce((a, b) => a + b.price, 0) / trips.length);
+        document.getElementById('avgPrice').textContent = avgPrice + ' DZD';
+      }
+
+      // Display cities
+      const citiesList = document.getElementById('citiesList');
+      citiesList.innerHTML = cityArray.map(c => `<span class="city-badge">${c}</span>`).join('');
+
+      // Draw network
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        drawNetwork();
+      }
+
+      function drawNetwork() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Calculate positions in circle
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(canvas.width, canvas.height) / 3;
+
+        const positions = {};
+        cityArray.forEach((city, i) => {
+          const angle = (i / cityArray.length) * Math.PI * 2;
+          positions[city] = {
+            x: centerX + Math.cos(angle) * radius,
+            y: centerY + Math.sin(angle) * radius
+          };
+        });
+
+        // Draw connections
+        ctx.strokeStyle = 'rgba(255, 107, 107, 0.3)';
+        ctx.lineWidth = 2;
+        connections.forEach(conn => {
+          const from = positions[conn.from];
+          const to = positions[conn.to];
+          if (from && to) {
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(to.x, to.y);
+            ctx.stroke();
+          }
+        });
+
+        // Draw cities
+        cityArray.forEach(city => {
+          const pos = positions[city];
+          const tripCount = trips.filter(t => t.from === city || t.to === city).length;
+          
+          // City circle
+          ctx.fillStyle = `rgba(255, 107, 107, ${0.5 + tripCount * 0.1})`;
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 25 + tripCount * 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Border
+          ctx.strokeStyle = 'rgba(78, 205, 196, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // City name
+          ctx.fillStyle = 'white';
+          ctx.font = 'bold 12px Poppins';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(city.substring(0, 3).toUpperCase(), pos.x, pos.y);
+        });
+      }
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('year').textContent = new Date().getFullYear();
+      setTimeout(initNetwork, 100);
+    });
+  </script>
+</body>
+</html>

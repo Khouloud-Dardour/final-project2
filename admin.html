@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - BusDZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="page-admin">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="index.html" class="btn ghost">🏠 Accueil</a>
+      <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Login Panel -->
+    <section id="loginPanel" class="admin-panel">
+      <h2>👨‍💼 Admin Login</h2>
+      <p style="color: var(--muted); margin-bottom: 1.5rem;">Default: admin / admin123</p>
+      <form id="adminLogin">
+        <label>
+          <span>Username</span>
+          <input id="adminUser" required placeholder="admin"/>
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="adminPass" type="password" required placeholder="••••••••"/>
+        </label>
+        <div class="actions">
+          <button class="btn primary" type="submit">🔓 Login</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Admin Dashboard -->
+    <section id="adminApp" class="admin-app" style="display:none">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--accent);">📊 Admin Dashboard</h2>
+        <button id="logoutBtn" class="btn ghost">Logout</button>
+      </div>
+      
+      <div class="admin-grid">
+        <div>
+          <h3>🚍 Bus Trips Management</h3>
+          <div id="tripsList"></div>
+          <button id="addTripBtn" class="btn primary">+ Add New Trip</button>
+        </div>
+        <div>
+          <h3>📖 Bookings List</h3>
+          <div id="bookingsList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

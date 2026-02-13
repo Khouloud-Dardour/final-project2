@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Results - BusDZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="page-results">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="index.html" class="btn ghost">🏠 Accueil</a>
+      <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+      <a href="admin.html" class="btn ghost">👨‍💼 Admin</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Search Summary & Filters -->
+    <section class="search-head">
+      <div id="searchSummary"></div>
+      <div class="filters">
+        <label>
+          <span>🏢 Company</span>
+          <select id="filterCompany"><option value="all">All Companies</option></select>
+        </label>
+        <label>
+          <span>📊 Sort By</span>
+          <select id="sortBy">
+            <option value="default">Recommended</option>
+            <option value="priceAsc">💰 Price: Low → High</option>
+            <option value="priceDesc">💰 Price: High → Low</option>
+            <option value="timeAsc">🕐 Departure: Early → Late</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <!-- Results Grid -->
+    <section id="resultsList" class="results grid"></section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

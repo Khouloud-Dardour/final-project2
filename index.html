@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BusDZ - Bus Ticket Booking Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="page-index">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+      <a href="admin.html" class="btn ghost">👨‍💼 Admin</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-inner container">
+      <h1>Journey Beyond Limits</h1>
+      <p class="lead">Travel across Algeria with comfort, safety, and convenience. Book your next adventure in seconds.</p>
+
+      <form id="searchForm" class="search-form">
+        <div class="row">
+          <label>
+            <span>📍 Departure</span>
+            <select id="fromCity" required></select>
+          </label>
+          <label>
+            <span>🎯 Destination</span>
+            <select id="toCity" required></select>
+          </label>
+          <label>
+            <span>📅 Travel Date</span>
+            <input id="travelDate" type="date" required />
+          </label>
+          <label>
+            <span>👥 Passengers</span>
+            <input id="paxCount" type="number" min="1" max="6" value="1" />
+          </label>
+        </div>
+        <div class="row actions">
+          <button class="btn primary" type="submit">✈️ Search Trips</button>
+        </div>
+      </form>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <main class="container">
+    <section class="features">
+      <div class="card">
+        <h3>🗺️ Wide Network</h3>
+        <p>Connect across 15+ cities in Algeria with our extensive bus network. Travel to Algiers, Oran, Constantine, and beyond.</p>
+      </div>
+      <div class="card">
+        <h3>🔒 Secure Booking</h3>
+        <p>Your bookings are stored securely in your browser. No data transmitted to servers. Complete privacy guaranteed.</p>
+      </div>
+      <div class="card">
+        <h3>⚡ Instant Confirmation</h3>
+        <p>Get your booking confirmed instantly with QR code ticket. Download and share your ticket anywhere, anytime.</p>
+      </div>
+      <div class="card">
+        <h3>💳 Easy Payment</h3>
+        <p>Simple and fast payment simulation. Multiple seats, multiple passengers all in one booking.</p>
+      </div>
+      <div class="card">
+        <h3>📱 Mobile Friendly</h3>
+        <p>Fully responsive design works perfectly on desktop, tablet, and mobile devices. Book on the go.</p>
+      </div>
+      <div class="card">
+        <h3>👨‍💼 Admin Tools</h3>
+        <p>Manage trips, view bookings, and control your bus operations from our powerful admin dashboard.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      © <span id="year"></span> BusDZ - Your trusted bus booking platform for Algerian travels.
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passenger Details - BusDZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="page-passenger">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="brand">🚌 Bus<span class="accent">DZ</span></div>
+    <div class="nav-actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+      <a href="index.html" class="btn ghost">🏠 Accueil</a>
+      <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="passenger-wrap">
+      <form id="passengerForm">
+        <h2>👤 Passenger Information</h2>
+        <p style="color: var(--muted); margin-bottom: 1.5rem;">Please enter your details to complete the booking</p>
+        
+        <label>
+          <span>Full Name *</span>
+          <input id="fullName" type="text" placeholder="Enter your full name" required/>
+        </label>
+        
+        <label>
+          <span>Phone Number *</span>
+          <input id="phone" type="tel" placeholder="+213 xxx xxx xxx" required/>
+        </label>
+        
+        <label>
+          <span>Email (Optional)</span>
+          <input type="email" placeholder="your@email.com"/>
+        </label>
+
+        <div class="actions" style="margin-top: 2rem;">
+          <button class="btn primary" type="submit">✅ Confirm Booking</button>
+        </div>
+      </form>
+
+      <aside class="summary" id="bookingSummary">
+        <h4>📋 Booking Summary</h4>
+        <!-- Will be populated by JS -->
+      </aside>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
