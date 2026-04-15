@@ -6,6 +6,7 @@
   <title>Your Ticket - BusDZ</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
   <style>
     @media print {
       body { background: white; }
@@ -23,6 +24,7 @@
       <button id="themeToggle" class="theme-toggle">🌙</button>
       <a href="index.html" class="btn ghost">🏠 Accueil</a>
       <a href="network.html" class="btn ghost">🗺️ Réseau</a>
+      <a id="adminLink" href="admin.html" class="btn ghost" data-role-required="admin" style="display:none;">👨‍💼 Admin</a>
     </div>
   </nav>
 
@@ -39,6 +41,8 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/admin-auth.js"></script>
 </body>
 </html>

@@ -287,24 +287,57 @@
     const tripsList = document.getElementById('tripsList');
     const bookingsList = document.getElementById('bookingsList');
 
-    // ensure admin user exists
+    // Ensure admin user exists in localStorage
     const users = get('users',[]);
-    if(!users.some(u=>u.username==='admin')){users.push({id:uid('u_'),username:'admin',password:'admin123'});set('users',users)}
+    if(!users.some(u=>u.username==='admin'&&u.role==='admin')){
+      users.push({id:uid('u_'),username:'admin',password:'admin123',role:'admin'});
+      set('users',users);
+    }
 
+    // Check if user is already logged in as admin
+    if(window.auth && window.auth.isAdmin()){
+      loginPanel.style.display='none';
+      adminApp.style.display='block';
+      renderAdmin();
+      return;
+    }
+
+    // Handle admin login form
     document.getElementById('adminLogin').addEventListener('submit',e=>{
       e.preventDefault();
-      const u=document.getElementById('adminUser').value; const p=document.getElementById('adminPass').value;
-      const ok = get('users',[]).find(x=>x.username===u&&x.password===p);
-      if(!ok) return alert('Invalid credentials');
-      loginPanel.style.display='none'; adminApp.style.display='block'; renderAdmin();
+      const u=document.getElementById('adminUser').value;
+      const p=document.getElementById('adminPass').value;
+      
+      // Use auth service for login
+      if(window.auth){
+        const session = window.auth.login(u, p);
+        if(!session || !window.auth.isAdmin()){
+          alert('Invalid credentials or insufficient permissions');
+          return;
+        }
+        loginPanel.style.display='none';
+        adminApp.style.display='block';
+        renderAdmin();
+      } else {
+        // Fallback if auth service not available
+        const ok = get('users',[]).find(x=>x.username===u&&x.password===p&&x.role==='admin');
+        if(!ok) return alert('Invalid credentials or not admin');
+        loginPanel.style.display='none';
+        adminApp.style.display='block';
+        renderAdmin();
+      }
     })
 
+    // Handle logout
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn){
       logoutBtn.addEventListener('click',()=>{
-        loginPanel.style.display='block'; adminApp.style.display='none';
+        if(window.auth) window.auth.logout();
+        loginPanel.style.display='block';
+        adminApp.style.display='none';
         document.getElementById('adminUser').value='';
         document.getElementById('adminPass').value='';
+        console.log('[Admin] User logged out');
       })
     }
 

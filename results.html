@@ -6,6 +6,7 @@
   <title>Search Results - BusDZ</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
 </head>
 <body id="page-results">
   <!-- Navigation -->
@@ -15,7 +16,7 @@
       <button id="themeToggle" class="theme-toggle">🌙</button>
       <a href="index.html" class="btn ghost">🏠 Accueil</a>
       <a href="network.html" class="btn ghost">🗺️ Réseau</a>
-      <a href="admin.html" class="btn ghost">👨‍💼 Admin</a>
+      <a id="adminLink" href="admin.html" class="btn ghost" data-role-required="admin" style="display:none;">👨‍💼 Admin</a>
     </div>
   </nav>
 
@@ -44,6 +45,8 @@
     <section id="resultsList" class="results grid"></section>
   </main>
 
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/admin-auth.js"></script>
 </body>
 </html>

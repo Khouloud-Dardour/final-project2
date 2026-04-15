@@ -6,6 +6,7 @@
   <title>Admin Dashboard - BusDZ</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
 </head>
 <body id="page-admin">
   <!-- Navigation -->
@@ -59,6 +60,61 @@
     </section>
   </main>
 
+  <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/admin-auth.js"></script>
+  
+  <script>
+    /**
+     * Admin Login Handler
+     * Sets localStorage admin flag on successful authentication
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      const adminForm = document.getElementById('adminLogin');
+      const loginPanel = document.getElementById('loginPanel');
+      const adminApp = document.getElementById('adminApp');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Check if already logged in
+      if (adminAuth.isAdmin()) {
+        loginPanel.style.display = 'none';
+        adminApp.style.display = 'block';
+      }
+
+      // Handle login form submission
+      adminForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('adminUser').value;
+        const password = document.getElementById('adminPass').value;
+
+        // Simple validation (admin / admin123)
+        if (username === 'admin' && password === 'admin123') {
+          // Set admin access in localStorage
+          adminAuth.setAdmin(true);
+          
+          // Show dashboard, hide login
+          loginPanel.style.display = 'none';
+          adminApp.style.display = 'block';
+          
+          console.log('[Admin] Login successful - Admin access granted');
+          
+          // Optional: Show success message
+          alert('✅ Admin access granted!');
+        } else {
+          console.warn('[Admin] Login failed - Invalid credentials');
+          alert('❌ Invalid credentials');
+        }
+      });
+
+      // Handle logout
+      logoutBtn.addEventListener('click', () => {
+        adminAuth.logout();
+        loginPanel.style.display = 'block';
+        adminApp.style.display = 'none';
+        adminForm.reset();
+        console.log('[Admin] Logged out');
+      });
+    });
+  </script>
 </body>
 </html>

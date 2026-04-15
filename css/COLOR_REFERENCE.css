@@ -1,0 +1,299 @@
+/* ============================================
+   BusDZ Color System - Quick Reference Guide
+   ============================================ */
+
+/*
+LIGHT MODE COLORS
+─────────────────────────────────────────────
+Background:     #F8FAFC
+Surface:        #FFFFFF
+Primary Text:   #0F172A
+Secondary Text: #475569
+Border:         #E2E8F0
+Accent:         #2563EB
+
+DARK MODE COLORS
+─────────────────────────────────────────────
+Background:     #0B1220
+Surface:        #111827
+Primary Text:   #E5E7EB
+Secondary Text: #94A3B8
+Border:         #1F2937
+Accent:         #3B82F6
+
+SEMANTIC COLORS (Both Themes)
+─────────────────────────────────────────────
+Success:  #10B981  (Confirmations)
+Warning:  #F59E0B  (Alerts)
+Danger:   #EF4444  (Errors)
+Info:     #06B6D4  (Information)
+*/
+
+/* ============== BASIC USAGE ============== */
+
+/* Text */
+color: var(--text);                    /* Primary text */
+color: var(--text-secondary);          /* Secondary text */
+color: var(--text-muted);              /* Disabled text*/
+color: var(--accent);                  /* Accent text */
+
+/* Backgrounds */
+background-color: var(--surface);      /* Card/panel */
+background-color: var(--bg);           /* Page background */
+background-color: var(--bg-hover);     /* Hover states */
+
+/* Borders */
+border: 1px solid var(--border);       /* Standard border */
+border: 2px solid var(--accent);       /* Accent border */
+
+/* ============ CSS VARIABLES ============ */
+
+:root {
+  /* Active Theme (default: dark) */
+  --bg                   /* Background color */
+  --surface              /* Card/container */
+  --text                 /* Primary text */
+  --text-secondary       /* Secondary text */
+  --text-muted           /* Disabled text */
+  --border               /* Border color */
+  --accent               /* Action color */
+  --bg-overlay           /* Modal overlay */
+  --bg-hover             /* Hover state */
+
+  /* Semantic Colors */
+  --success              /* Green #10B981 */
+  --warning              /* Amber #F59E0B */
+  --danger               /* Red #EF4444 */
+  --info                 /* Cyan #06B6D4 */
+}
+
+/* ========== COMMON PATTERNS ========== */
+
+/* Card/Container */
+.card {
+  background-color: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text);
+}
+
+/* Button */
+.btn {
+  background: linear-gradient(135deg, #2563EB, #06B6D4);
+  color: white;
+  border: none;
+}
+
+/* Input */
+input {
+  background: var(--bg-hover);
+  border: 2px solid var(--border);
+  color: var(--text);
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+}
+
+/* Success Alert */
+.alert-success {
+  background: var(--success-light);
+  border: 2px solid var(--success);
+  color: var(--success-dark);
+}
+
+/* Error Message */
+.error {
+  color: var(--danger);
+  background: var(--danger-light);
+  border-left: 4px solid var(--danger);
+  padding: 1rem;
+}
+
+/* ========== WITH TRANSPARENCY ========= */
+
+/* Overlay */
+.overlay {
+  background: var(--bg-overlay);
+  backdrop-filter: blur(10px);
+}
+
+/* Gradient Background */
+.hero {
+  background: linear-gradient(135deg, #2563EB, #06B6D4);
+}
+
+/* ====== HOVER/ACTIVE STATES ======= */
+
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* ========= UTILITY CLASSES ========= */
+
+.text-primary    { color: var(--text); }
+.text-secondary  { color: var(--text-secondary); }
+.text-accent     { color: var(--accent); }
+.text-success    { color: var(--success); }
+.text-warning    { color: var(--warning); }
+.text-danger     { color: var(--danger); }
+
+.bg-primary      { background: var(--surface); }
+.bg-accent       { background: linear-gradient(135deg, #2563EB, #06B6D4); }
+.bg-success      { background: var(--success-light); }
+.bg-warning      { background: var(--warning-light); }
+.bg-danger       { background: var(--danger-light); }
+
+.border-primary  { border-color: var(--border); }
+.border-accent   { border-color: var(--accent); }
+.border-success  { border-color: var(--success); }
+.border-danger   { border-color: var(--danger); }
+
+/* ======== THEME SWITCHING ======== */
+
+/* Automatically applies when body has light-theme class */
+body.light-theme {
+  --bg: var(--bg-light);
+  --surface: var(--surface-light);
+  --text: var(--text-light);
+  /* All colors update automatically */
+}
+
+/* ===== ACCESSIBILITY NOTES ===== */
+
+/*
+✓ Achieve AAA contrast (13.5:1) for primary text
+✓ Text size affects contrast requirements
+✓ Use semantic colors + patterns (not color alone)
+✓ Test with colorblind simulators
+✓ Large touch targets (44x44px minimum)
+*/
+
+/* ========= COMMON MISTAKES ========= */
+
+/* ❌ DON'T: Use old variable names */
+color: var(--primary);        /* WRONG */
+color: var(--accent);         /* RIGHT */
+
+/* ❌ DON'T: Hardcode colors */
+background: #ff6b6b;          /* WRONG */
+background: var(--accent);    /* RIGHT */
+
+/* ❌ DON'T: Ignore contrast ratios */
+color: #94A3B8 on #FFFFFF;   /* Poor contrast */
+color: #0F172A on #FFFFFF;   /* Good contrast */
+
+/* ❌ DON'T: Use color only for information */
+This is <span style="color: red;">error</span>      /* WRONG */
+This is <span style="color: red;">✗ error</span>   /* RIGHT */
+
+/* ✓ DO: Use CSS variables consistently */
+.element {
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* ========= TESTING ======== */
+
+/*
+1. View in both light and dark modes
+2. Test with colorblind simulator
+3. Check contrast with WebAIM
+4. Test on different screen sizes
+5. Verify mobile color rendering
+6. Test system dark mode preference
+*/
+
+/* ===== BROWSER SUPPORT ===== */
+
+/*
+✓ Chrome 49+
+✓ Firefox 31+
+✓ Safari 9.1+
+✓ Edge 15+
+✓ iOS Safari 9.3+
+✓ Android Chrome
+*/
+
+/* =========== EXAMPLES =========== */
+
+/* Simple Card */
+.trip-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.trip-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.15);
+}
+
+/* Form Input */
+input[type="text"] {
+  background: var(--bg-hover);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Badge Component */
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.badge--success {
+  background: var(--success-light);
+  color: var(--success-dark);
+  border: 1px solid var(--success);
+}
+
+/* Status Indicator */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status--active {
+  color: var(--success);
+}
+
+.status--pending {
+  color: var(--warning);
+}
+
+.status--error {
+  color: var(--danger);
+}
+
+/* ============= DOCUMENTATION ============= */
+
+/*
+Full documentation: COLOR_SYSTEM.md
+GitHub: https://github.com/BusDZ/design-system
+Last Updated: April 12, 2026
+Version: 1.0.0
+*/
