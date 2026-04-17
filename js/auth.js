@@ -3,18 +3,17 @@
  * Production-ready RBAC implementation
  * 
  * Features:
- * - Secure session management
+ * - Secure session management with persistent storage
  * - Role-based access control (RBAC)
  * - Route protection
- * - Automatic logout on invalid session
+ * - Manual logout only (NO automatic timeout)
  * - XSS protection for stored data
  */
 
 class AuthService {
   constructor() {
     this.SESSION_KEY = 'busdz_session';
-    // SESSION_TIMEOUT disabled - sessions last forever until manual logout
-    this.SESSION_TIMEOUT = Infinity; // Disabled: was 30 * 60 * 1000 (30 minutes)
+    // NO AUTOMATIC TIMEOUT - Sessions persist until manual logout
     this.STORAGE_PREFIX = 'auth_';
   }
 
@@ -23,8 +22,9 @@ class AuthService {
    */
   init() {
     this.validateSession();
-    this.setupSessionTimeout();
+    // NOTE: setupSessionTimeout REMOVED - no automatic logout
     this.setupLogoutListener();
+    console.log('[Auth] Initialized - Session will persist until manual logout');
   }
 
   /**
@@ -66,11 +66,19 @@ class AuthService {
 
       // Store session securely
       localStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+      
+      // Verify session was stored correctly
+      const verifySession = localStorage.getItem(this.SESSION_KEY);
+      if (!verifySession) {
+        console.error('[Auth] CRITICAL: Session storage failed!');
+        return false;
+      }
 
       // Dispatch custom event for components to listen
       window.dispatchEvent(new CustomEvent('auth:login', { detail: session }));
 
-      console.log('[Auth] User logged in:', username, 'Role:', session.role);
+      console.log('[Auth] ✓ User logged in:', username, 'Role:', session.role);
+      console.log('[Auth] ✓ Session stored in localStorage:', verifySession);
       return session;
     } catch (error) {
       console.error('[Auth] Login error:', error);
@@ -98,10 +106,16 @@ class AuthService {
   getSession() {
     try {
       const session = localStorage.getItem(this.SESSION_KEY);
-      return session ? JSON.parse(session) : null;
+      if (session) {
+        const parsed = JSON.parse(session);
+        console.log('[Auth] Session retrieved - user:', parsed.username, 'role:', parsed.role);
+        return parsed;
+      }
+      console.log('[Auth] No session in storage');
+      return null;
     } catch (error) {
       console.error('[Auth] Session parse error:', error);
-      this.logout();
+      console.error('[Auth] Raw data:', localStorage.getItem(this.SESSION_KEY));
       return null;
     }
   }
@@ -134,53 +148,72 @@ class AuthService {
   }
 
   /**
-   * Check if user is admin
+   * Check if user is admin (role === 'admin')
    * @returns {boolean}
    */
   isAdmin() {
-    return this.hasRole('admin');
+    const session = this.getSession();
+    const isAdmin = session && session.role === 'admin';
+    console.log('[Auth] isAdmin check: ', isAdmin, ' (role: ', session ? session.role : 'none', ')');
+    return isAdmin;
   }
 
   /**
    * Validate session is still valid
+   * Sessions NEVER expire automatically - only valid until manual logout
    * @param {object} session
    * @returns {boolean}
    */
   isSessionValid(session) {
-    if (!session || !session.loginTime) return false;
-
-    // Session timeout disabled - sessions last forever until manual logout
-    // const age = Date.now() - session.loginTime;
-    // if (age > this.SESSION_TIMEOUT) {
-    //   console.warn('[Auth] Session expired');
-    //   this.logout();
-    //   return false;
-    // }
-
+    // Session is valid if it exists in localStorage
+    // NO automatic timeout - persists forever or until manual logout
+    if (!session || !session.loginTime) {
+      return false;
+    }
     return true;
   }
 
   /**
-   * Validate current session and redirect if invalid
+   * Validate current session and manage UI visibility
    */
   validateSession() {
-    if (!this.isAuthenticated()) {
-      // Clear any admin panels
+    const isAuth = this.isAuthenticated();
+    const isUserAdmin = this.isAdmin();
+    const session = this.getSession();
+    
+    console.log('[Auth] Session validation: authenticated=', isAuth, 'isAdmin=', isUserAdmin);
+    
+    if (!isAuth) {
+      // Not authenticated - hide admin panel, show login
       const adminPanel = document.getElementById('adminApp');
       if (adminPanel) adminPanel.style.display = 'none';
       const loginPanel = document.getElementById('loginPanel');
       if (loginPanel) loginPanel.style.display = 'block';
+      console.log('[Auth] Not authenticated - showing login panel');
+    } else if (isAuth && isUserAdmin) {
+      // Authenticated AND admin - show admin panel, hide login
+      const loginPanel = document.getElementById('loginPanel');
+      if (loginPanel) loginPanel.style.display = 'none';
+      const adminPanel = document.getElementById('adminApp');
+      if (adminPanel) adminPanel.style.display = 'block';
+      console.log('[Auth] Admin user logged in - showing admin panel');
+    } else {
+      // Authenticated but NOT admin - hide admin features
+      const adminPanel = document.getElementById('adminApp');
+      if (adminPanel) adminPanel.style.display = 'none';
+      const loginPanel = document.getElementById('loginPanel');
+      if (loginPanel) loginPanel.style.display = 'block';
+      console.log('[Auth] Regular user - hiding admin features');
     }
   }
 
   /**
-   * Setup automatic session timeout
-   * DISABLED: Sessions now last forever until manual logout
+   * DISABLED - Automatic session timeout completely removed
+   * Sessions now persist indefinitely until manual logout
    */
   setupSessionTimeout() {
-    // Automatic session timeout is disabled
-    // Sessions persist until user manually logs out
-    console.log('[Auth] Session timeout disabled - sessions persist until manual logout');
+    console.log('[Auth] setupSessionTimeout() is disabled - no automatic timeout');
+    // THIS FUNCTION DOES NOTHING - KEPT FOR COMPATIBILITY ONLY
   }
 
   /**
