@@ -91,5 +91,68 @@
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script src="js/admin-auth.js"></script>
+
+  <script>
+    /**
+     * Secret Admin Shortcut: Press A + D + M in sequence (within 3 seconds)
+     * This reveals the hidden admin button for the site owner
+     */
+    (function() {
+      const SECRET_KEYS = ['a', 'd', 'm'];
+      let keySequence = [];
+      const TIMEOUT = 3000; // 3 seconds to complete the sequence
+      let timeoutId = null;
+
+      document.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        
+        // Only track A, D, M keys
+        if (!SECRET_KEYS.includes(key)) {
+          return;
+        }
+
+        // Add key to sequence
+        keySequence.push(key);
+        console.log('[Secret] Keys pressed:', keySequence.join('-').toUpperCase());
+
+        // Reset timeout
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          console.log('[Secret] Timeout - sequence reset');
+          keySequence = [];
+        }, TIMEOUT);
+
+        // Check if sequence matches
+        if (keySequence.length === SECRET_KEYS.length) {
+          const sequence = keySequence.join('');
+          if (sequence === SECRET_KEYS.join('')) {
+            // ✨ SECRET UNLOCKED ✨
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) {
+              adminLink.style.display = 'inline-block';
+              console.log('✨ [SECRET] Admin button revealed! Press A + D + M detected!');
+              
+              // Visual feedback - briefly highlight the button
+              adminLink.style.transition = 'all 0.3s ease';
+              adminLink.style.opacity = '0.5';
+              setTimeout(() => {
+                adminLink.style.opacity = '1';
+              }, 300);
+            }
+            
+            // Clear sequence after success
+            keySequence = [];
+            clearTimeout(timeoutId);
+          } else if (keySequence.length > 0) {
+            // Wrong sequence or too many keys - reset
+            console.log('[Secret] Incorrect sequence:', sequence);
+            keySequence = [];
+          }
+        }
+      });
+
+      console.log('[Secret] Keyboard shortcut listener ready - Press A + D + M in sequence to reveal Admin button');
+    })();
+  </script>
 </body>
 </html>

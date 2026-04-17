@@ -307,3 +307,38 @@
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
   <script src="js/admin-auth.js"></script>
+
+  <script>
+    /**
+     * Secret Admin Shortcut: Press A + D + M in sequence (within 3 seconds)
+     */
+    (function() {
+      const SECRET_KEYS = ['a', 'd', 'm'];
+      let keySequence = [];
+      const TIMEOUT = 3000;
+      let timeoutId = null;
+
+      document.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        if (!SECRET_KEYS.includes(key)) return;
+
+        keySequence.push(key);
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => { keySequence = []; }, TIMEOUT);
+
+        if (keySequence.length === SECRET_KEYS.length) {
+          if (keySequence.join('') === SECRET_KEYS.join('')) {
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) {
+              adminLink.style.display = 'inline-block';
+              adminLink.style.opacity = '0.5';
+              setTimeout(() => { adminLink.style.opacity = '1'; }, 300);
+              console.log('✨ Admin button revealed!');
+            }
+            keySequence = [];
+            clearTimeout(timeoutId);
+          }
+        }
+      });
+    })();
+  </script>
