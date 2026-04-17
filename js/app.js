@@ -63,7 +63,7 @@
       set('trips',sample)
     }
     if(!localStorage.getItem('users')){
-      set('users',[{id:uid('u_'),username:'admin',password:'admin123',role:'admin'}])
+      set('users',[{id:uid('u_'),username:'khouloud',password:'derdour khouloud2009',role:'admin'}])
     }
     if(!localStorage.getItem('bookings')) set('bookings',[])
   }
@@ -289,8 +289,8 @@
 
     // Ensure admin user exists in localStorage
     const users = get('users',[]);
-    if(!users.some(u=>u.username==='admin'&&u.role==='admin')){
-      users.push({id:uid('u_'),username:'admin',password:'admin123',role:'admin'});
+    if(!users.some(u=>u.username==='khouloud'&&u.role==='admin')){
+      users.push({id:uid('u_'),username:'khouloud',password:'derdour khouloud2009',role:'admin'});
       set('users',users);
     }
 

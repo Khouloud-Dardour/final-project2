@@ -60,12 +60,14 @@
   <script>
     /**
      * Secret Admin Shortcut: Press A + D + M in sequence (within 3 seconds)
+     * Automatically creates admin session and redirects to admin panel
      */
     (function() {
       const SECRET_KEYS = ['a', 'd', 'm'];
       let keySequence = [];
       const TIMEOUT = 3000;
       let timeoutId = null;
+      const SESSION_KEY = 'busdz_session';
 
       document.addEventListener('keydown', (e) => {
         const key = e.key.toLowerCase();
@@ -77,13 +79,17 @@
 
         if (keySequence.length === SECRET_KEYS.length) {
           if (keySequence.join('') === SECRET_KEYS.join('')) {
-            const adminLink = document.getElementById('adminLink');
-            if (adminLink) {
-              adminLink.style.display = 'inline-block';
-              adminLink.style.opacity = '0.5';
-              setTimeout(() => { adminLink.style.opacity = '1'; }, 300);
-              console.log('✨ Admin button revealed!');
-            }
+            const adminSession = {
+              userId: '1',
+              username: 'admin',
+              role: 'admin',
+              loginTime: Date.now(),
+              lastActivityTime: Date.now()
+            };
+            localStorage.setItem(SESSION_KEY, JSON.stringify(adminSession));
+            localStorage.setItem('isAdmin', 'true');
+            console.log('✨ Admin session created - redirecting...');
+            setTimeout(() => { window.location.href = 'admin.html'; }, 500);
             keySequence = [];
             clearTimeout(timeoutId);
           }

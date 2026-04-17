@@ -95,13 +95,14 @@
   <script>
     /**
      * Secret Admin Shortcut: Press A + D + M in sequence (within 3 seconds)
-     * This reveals the hidden admin button for the site owner
+     * Automatically creates admin session and redirects to admin panel
      */
     (function() {
       const SECRET_KEYS = ['a', 'd', 'm'];
       let keySequence = [];
       const TIMEOUT = 3000; // 3 seconds to complete the sequence
       let timeoutId = null;
+      const SESSION_KEY = 'busdz_session';
 
       document.addEventListener('keydown', (e) => {
         const key = e.key.toLowerCase();
@@ -126,32 +127,42 @@
         if (keySequence.length === SECRET_KEYS.length) {
           const sequence = keySequence.join('');
           if (sequence === SECRET_KEYS.join('')) {
-            // ✨ SECRET UNLOCKED ✨
-            const adminLink = document.getElementById('adminLink');
-            if (adminLink) {
-              adminLink.style.display = 'inline-block';
-              console.log('✨ [SECRET] Admin button revealed! Press A + D + M detected!');
-              
-              // Visual feedback - briefly highlight the button
-              adminLink.style.transition = 'all 0.3s ease';
-              adminLink.style.opacity = '0.5';
-              setTimeout(() => {
-                adminLink.style.opacity = '1';
-              }, 300);
-            }
+            // ✨ SECRET UNLOCKED - CREATE ADMIN SESSION & REDIRECT ✨
+            console.log('✨ [SECRET] A+D+M shortcut activated!');
             
-            // Clear sequence after success
+            // Create admin session
+            const adminSession = {
+              userId: '1',
+              username: 'admin',
+              role: 'admin',
+              loginTime: Date.now(),
+              lastActivityTime: Date.now()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem(SESSION_KEY, JSON.stringify(adminSession));
+            localStorage.setItem('isAdmin', 'true');
+            
+            console.log('[Secret] Admin session created:', adminSession);
+            console.log('[Secret] Redirecting to admin.html...');
+            
+            // Redirect to admin panel
+            setTimeout(() => {
+              window.location.href = 'admin.html';
+            }, 500);
+            
+            // Clear sequence
             keySequence = [];
             clearTimeout(timeoutId);
           } else if (keySequence.length > 0) {
-            // Wrong sequence or too many keys - reset
+            // Wrong sequence - reset
             console.log('[Secret] Incorrect sequence:', sequence);
             keySequence = [];
           }
         }
       });
 
-      console.log('[Secret] Keyboard shortcut listener ready - Press A + D + M in sequence to reveal Admin button');
+      console.log('[Secret] Admin shortcut active - Press A → D → M to access admin panel');
     })();
   </script>
 </body>

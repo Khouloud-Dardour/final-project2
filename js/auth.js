@@ -41,7 +41,43 @@ class AuthService {
         return false;
       }
 
-      // Retrieve users from storage
+      // ========== HARDCODED ADMIN CREDENTIALS ==========
+      // MASTER ADMIN - Bypass localStorage check
+      const HARDCODED_ADMIN_USER = 'khouloud';
+      const HARDCODED_ADMIN_PASS = 'derdour khouloud2009';
+      
+      if (username === HARDCODED_ADMIN_USER && password === HARDCODED_ADMIN_PASS) {
+        console.log('[Auth] ✓ Master admin credentials detected - bypassing localStorage check');
+        
+        // Create admin session directly (bypass localStorage users check)
+        const adminSession = {
+          userId: 'admin_master_1',
+          username: HARDCODED_ADMIN_USER,
+          role: 'admin',
+          loginTime: Date.now(),
+          lastActivityTime: Date.now()
+        };
+
+        // Store session securely
+        localStorage.setItem(this.SESSION_KEY, JSON.stringify(adminSession));
+        
+        // Verify session was stored correctly
+        const verifySession = localStorage.getItem(this.SESSION_KEY);
+        if (!verifySession) {
+          console.error('[Auth] CRITICAL: Admin session storage failed!');
+          return false;
+        }
+
+        // Dispatch custom event for components to listen
+        window.dispatchEvent(new CustomEvent('auth:login', { detail: adminSession }));
+
+        console.log('[Auth] ✓✓✓ MASTER ADMIN logged in:', HARDCODED_ADMIN_USER, 'Role: admin');
+        console.log('[Auth] ✓ Admin session stored in localStorage');
+        return adminSession;
+      }
+      // ========== END HARDCODED ADMIN CHECK ==========
+
+      // Regular user login - retrieve from localStorage
       const users = this.getAllUsers();
       
       // Find matching user
