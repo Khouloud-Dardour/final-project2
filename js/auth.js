@@ -13,7 +13,8 @@
 class AuthService {
   constructor() {
     this.SESSION_KEY = 'busdz_session';
-    this.SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    // SESSION_TIMEOUT disabled - sessions last forever until manual logout
+    this.SESSION_TIMEOUT = Infinity; // Disabled: was 30 * 60 * 1000 (30 minutes)
     this.STORAGE_PREFIX = 'auth_';
   }
 
@@ -148,12 +149,13 @@ class AuthService {
   isSessionValid(session) {
     if (!session || !session.loginTime) return false;
 
-    const age = Date.now() - session.loginTime;
-    if (age > this.SESSION_TIMEOUT) {
-      console.warn('[Auth] Session expired');
-      this.logout();
-      return false;
-    }
+    // Session timeout disabled - sessions last forever until manual logout
+    // const age = Date.now() - session.loginTime;
+    // if (age > this.SESSION_TIMEOUT) {
+    //   console.warn('[Auth] Session expired');
+    //   this.logout();
+    //   return false;
+    // }
 
     return true;
   }
@@ -173,20 +175,12 @@ class AuthService {
 
   /**
    * Setup automatic session timeout
+   * DISABLED: Sessions now last forever until manual logout
    */
   setupSessionTimeout() {
-    // Check session validity every minute
-    setInterval(() => {
-      if (!this.isSessionValid(this.getSession())) {
-        console.warn('[Auth] Session timeout - logging out');
-        this.logout();
-        // Redirect to home if on admin page
-        if (document.body.id === 'page-admin') {
-          alert('Session expired. Please log in again.');
-          window.location.href = 'index.html';
-        }
-      }
-    }, 60000);
+    // Automatic session timeout is disabled
+    // Sessions persist until user manually logs out
+    console.log('[Auth] Session timeout disabled - sessions persist until manual logout');
   }
 
   /**
