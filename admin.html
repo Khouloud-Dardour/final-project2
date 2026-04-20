@@ -26,7 +26,7 @@
       <form id="adminLogin">
         <label>
           <span>Username</span>
-          <input id="adminUser" required placeholder="admin"/>
+          <input id="adminUser" required placeholder="khouloud"/>
         </label>
         <label>
           <span>Password</span>
@@ -86,8 +86,8 @@
         const username = document.getElementById('adminUser').value;
         const password = document.getElementById('adminPass').value;
 
-        // Simple validation (admin / admin123)
-        if (username === 'admin' && password === 'admin123') {
+        // Simple validation (khouloud / derdour khouloud2009)
+        if (username === 'khouloud' && password === 'derdour khouloud2009') {
           // Set admin access in localStorage
           adminAuth.setAdmin(true);
           
